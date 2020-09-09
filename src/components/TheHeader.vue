@@ -27,6 +27,7 @@
           width="131"
           class="mr-2"
           :to="{name: 'home'}"
+          v-if="$route.name != 'home'"
         >
           <span>Catalog</span>
         </v-btn>
@@ -38,6 +39,7 @@
           width="131"
           class="mr-2"
           :to="{name: 'add'}"
+          v-if="$route.name == 'home' && loggedIn"
         >
           <span>+ Add</span>
         </v-btn>
@@ -97,8 +99,9 @@
           :ripple="false"
         >
           <v-badge
-            content="2"
-            value="2"
+            v-if="favoritesCounter"
+            :content="favoritesCounter"
+            :value="favoritesCounter"
             color="teal"
             overlap
           >
@@ -126,27 +129,38 @@ export default {
 
   computed: {
     ...mapGetters({
-      loggedIn: "user/loggedIn",
-      user: "user/data"
+      loggedIn: "users/loggedIn",
+      user: "users/data"
     }),
 
     isAuthLayout() {
       return this.$route.meta.authLayout
     },
 
-    avatar() {
-      if ( this.loggedIn ) {
-        let name = this.user.displayName.split(" ");
-        let avatar = '';
+    favoritesCounter() {
+      if ( !this.user.favorites ) {
+        return false
+      }
+      
+      return Object.values(this.user.favorites).filter(fav => {
+        console.log('fav', fav)
+        return fav === true
+      }).length
+    },
 
-        if ( name.length > 1 ) {
+    avatar() {
+      let avatar = '01';
+
+      if ( this.loggedIn && this.user.displayName ) {
+        if ( this.user.displayName.indexOf(' ') >= 0 ) {
+          let name = this.user.displayName.split(" ");
           avatar = `${name[0].charAt(0).toUpperCase()}${name[1].charAt(0).toUpperCase()}`
         } else {
-          avatar = `${name[0].charAt(0).toUpperCase()}${name[0].charAt(1).toUpperCase()}`
+          avatar = `${this.user.displayName[0].toUpperCase()}${this.user.displayName[1].toUpperCase()}`
         }
-
-        return avatar
       }
+
+      return avatar
     }
   },
 

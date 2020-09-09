@@ -1,6 +1,6 @@
 <template>
   <v-container class="main">
-    <ValidationObserver tag="form" ref="observer" v-slot="{ validate, reset }">
+    <ValidationObserver tag="form" class="form_register" ref="observer" v-slot="{ invalid }">
       <v-row>
         <v-col cols="6" offset="3" class="d-flex justify-center">
           <v-card 
@@ -15,29 +15,37 @@
             </v-card-title>
 
             <v-card-text>
-              <v-text-field
-                label="Email"
-                type="email"
-                placeholder="Example@gmail.com"
-                outlined
-                v-model.trim="registerForm.email"
-              ></v-text-field>
+              <ValidationProvider name="Email" v-slot="{ errors }" rules="required|email">
+                <v-text-field
+                  label="Email"
+                  type="email"
+                  placeholder="Example@gmail.com"
+                  outlined
+                  autocomplete="on"
+                  :error-messages="errors"
+                  v-model.trim="registerForm.email"
+                ></v-text-field>
+              </ValidationProvider>
 
-              <v-text-field
-                label="Full Name"
-                type="text"
-                placeholder="Tony Stark"
-                outlined
-                v-model.trim="registerForm.displayName"
-              ></v-text-field>
+              <ValidationProvider name="Full Name" v-slot="{ errors }" rules="required|max:34|min:2">
+                <v-text-field
+                  label="Full Name"
+                  type="text"
+                  placeholder="Tony Stark"
+                  outlined
+                  :error-messages="errors"
+                  v-model.trim="registerForm.displayName"
+                ></v-text-field>
+              </ValidationProvider>
 
-              <ValidationProvider name="password" v-slot="{ errors }" rules="required|max:22|min:6">
+              <ValidationProvider name="Password" v-slot="{ errors }" rules="required|max:22|min:6">
                 <v-text-field
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'"
                   label="Password"
                   placeholder="******"
                   outlined
+                  autocomplete="on"
                   class="flex-wrap"
                   v-model.trim="registerForm.password"
                   :error-messages="errors"
@@ -45,13 +53,14 @@
                 ></v-text-field>
               </ValidationProvider>
 
-              <ValidationProvider name="confirm" v-slot="{ errors }" rules="required|max:22|min:6|password:@password">
+              <ValidationProvider name="Password Confirmation" v-slot="{ errors }" rules="required|max:22|min:6|password:@Password">
                 <v-text-field
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'"
                   label="Password Confirmation"
                   placeholder="******"
                   outlined
+                  autocomplete="on"
                   class="flex-wrap"
                   v-model.trim="registerForm.password2"
                   :error-messages="errors"
@@ -60,11 +69,12 @@
               </ValidationProvider>
 
               <v-btn 
-                class="mt-5"
                 color="teal" 
                 block
-                dark
+                :dark="!invalid"
                 x-large
+                @click="register()"
+                :disabled="invalid"
               >Register</v-btn>
             </v-card-text>
           </v-card>
@@ -91,41 +101,14 @@
 </template>
 
 <script>
-import { required, email, max, min, password } from 'vee-validate/dist/rules'
-import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-
-extend('required', {
-  ...required,
-  message: '{_field_} can not be empty',
-})
-
-extend('max', {
-  ...max,
-  message: '{_field_} may not be greater than {length} characters',
-})
-
-extend('min', {
-  ...min,
-  message: '{_field_} may not be less than {length} characters',
-})
-
-extend('password', {
-  params: ['target'],
-  validate(value, { target }) {
-    return value === target;
-  },
-  message: 'Password confirmation does not match'
-});
-
-extend('email', {
-  ...email,
-  message: 'Email must be valid',
-})
+import { ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
 export default {
   name: 'auth-register',
 
-  props: {
+  components: {
+    ValidationObserver,
+    ValidationProvider,
   },
 
   data: () => ({
@@ -139,9 +122,14 @@ export default {
     }
   }),
 
-  components: {
-    ValidationObserver,
-    ValidationProvider,
+  methods: {
+    register() {
+      this.$store.dispatch('users/register', {
+        email: this.registerForm.email,
+        displayName: this.registerForm.displayName,
+        password: this.registerForm.password
+      })
+    }
   }
 }
 </script>

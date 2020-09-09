@@ -1,9 +1,13 @@
 <template>
-  <v-container class="main d-flex flex-wrap">
+  <v-container class="main">
     <v-row no-gutters>
       <v-col cols="8" offset="2" class="">
-        <v-container class="main d-flex flex-wrap pa-0">
-          <catalog-item v-for="item in items" :key="item.id" :item="item" />
+        <div v-if="loading" class="mt-10 d-flex align-center justify-center">
+          <v-progress-circular indeterminate color="teal" size="64"></v-progress-circular>
+        </div>
+
+        <v-container v-else class="mt-4 d-flex flex-wrap pa-0">
+          <catalog-item v-for="item in filteredItems" :key="item.id" :item="item" />
         </v-container>
       </v-col>
     </v-row>
@@ -11,6 +15,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   name: 'home',
 
@@ -19,33 +25,44 @@ export default {
   },
 
   data: () => ({
-    items: [
-      {
-        id: 1,
-        title: 'Item 1',
-        price: 100
-      },
-      {
-        id: 2,
-        title: 'Item 2',
-        price: 18323.42323
-      },
-      {
-        id: 3,
-        title: 'Item 3',
-        price: 100
-      },
-      {
-        id: 4,
-        title: 'Item 4',
-        price: 100
-      },
-      {
-        id: 5,
-        title: 'Item 5',
-        price: 100
-      },
-    ]
+    loading: true,
   }),
+
+  computed: {
+    ...mapGetters({
+      items: "items/data"
+    }),
+
+    filteredItems() {
+      return this.sortItems(this.items.filter(item => {
+        return item
+      }))
+    }
+  },
+
+  created() {
+    this.$store.dispatch('items/getItems').then((res) => {
+      this.loading = false
+    })
+  },
+
+  methods: {
+    // Sort items by created date "created" DESC
+    sortItems(items) {
+      function compare(a, b) {
+        if ( a.created > b.created ) {
+          return -1;
+        }
+
+        if ( a.created < b.created ) {
+          return 1;
+        }
+        
+        return 0;
+      }
+
+      return items.sort(compare);
+    },
+  }
 }
 </script>

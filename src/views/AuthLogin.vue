@@ -1,6 +1,6 @@
 <template>
   <v-container class="main">
-    <v-form ref="form" @submit.prevent>
+    <ValidationObserver tag="form" class="form_login" ref="observer" v-slot="{ invalid }">
       <v-row>
         <v-col cols="6" offset="3" class="d-flex justify-center">
           <v-card 
@@ -15,45 +15,51 @@
             </v-card-title>
 
             <v-card-text>
-              <v-text-field
-                label="Email"
-                type="email"
-                placeholder="Example@gmail.com"
-                outlined
-                v-model.trim="loginForm.email"
-              ></v-text-field>
+              <ValidationProvider name="Email" v-slot="{ errors }" rules="required|email">
+                <v-text-field
+                  label="Email"
+                  type="email"
+                  placeholder="Example@gmail.com"
+                  outlined
+                  autocomplete="on"
+                  :error-messages="errors"
+                  v-model.trim="loginForm.email"
+                ></v-text-field>
+              </ValidationProvider>
 
-              <v-text-field
-                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPassword ? 'text' : 'password'"
-                label="Password"
-                placeholder="******"
-                outlined
-                class="flex-wrap"
-                hide-details
-                @click:append="showPassword = !showPassword"
-                v-model.trim="loginForm.password"
-              >
-                <template v-slot:append-outer>
-                  <div>
-                    <router-link :to="{name: 'home'}">Don’t remember password?</router-link>
-                  </div>
-                </template>
-              </v-text-field>
+              <ValidationProvider name="Password" v-slot="{ errors }" rules="required|max:22|min:6">
+                <v-text-field
+                  :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="showPassword ? 'text' : 'password'"
+                  label="Password"
+                  placeholder="******"
+                  outlined
+                  autocomplete="on"
+                  class="flex-wrap"
+                  v-model.trim="loginForm.password"
+                  :error-messages="errors"
+                  @click:append="showPassword = !showPassword"
+                ></v-text-field>
+              </ValidationProvider>
+
+              <div class="form_login__forgot">
+                <router-link :to="{name: 'home'}">Don’t remember password?</router-link>
+              </div>
 
               <v-btn 
                 class="mt-5"
                 color="teal" 
                 block
-                dark
+                :dark="!invalid"
                 x-large
                 @click="login()"
+                :disabled="invalid"
               >Continue</v-btn>
             </v-card-text>
           </v-card>
         </v-col>
       </v-row>
-    </v-form>
+    </ValidationObserver>
     
     <v-row>
       <v-col cols="6" offset="3" class="d-flex justify-center">
@@ -74,10 +80,14 @@
 </template>
 
 <script>
+import { ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+
 export default {
   name: 'auth-login',
 
-  props: {
+  components: {
+    ValidationObserver,
+    ValidationProvider,
   },
 
   data: () => ({
@@ -91,7 +101,7 @@ export default {
 
   methods: {
     login() {
-      this.$store.dispatch('user/login', {
+      this.$store.dispatch('users/login', {
         email: this.loginForm.email,
         password: this.loginForm.password
       })

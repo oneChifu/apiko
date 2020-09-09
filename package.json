@@ -13,6 +13,7 @@
     "register-service-worker": "^1.7.1",
     "vee-validate": "^3.3.9",
     "vue": "^2.6.12",
+    "vue-file-agent": "^1.7.3",
     "vue-router": "^3.2.0",
     "vuefire": "^2.2.4",
     "vuetify": "^2.2.11",

@@ -81,7 +81,7 @@ export default {
 
   methods: {
     async editUser() {
-      await this.$store.dispatch('user/editUser', {
+      await this.$store.dispatch('users/editUser', {
         // email: this.user.email,
         displayName: this.user.displayName,
         // password: this.newPassword

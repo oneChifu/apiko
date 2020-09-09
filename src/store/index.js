@@ -3,7 +3,8 @@ import Vuex from 'vuex'
 // import * as fb from '../firebase'
 // import router from '../router/index'
 
-import user from "./user";
+import users from "./users"
+import items from "./items"
 
 Vue.use(Vuex)
 
@@ -39,7 +40,8 @@ const store = new Vuex.Store({
   },
 
   modules: {
-    user
+    users,
+    items,
   }
 })
 
