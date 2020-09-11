@@ -8,10 +8,10 @@
             width="100%" 
             max-width="420"
             elevation="10"
-            class="mt-10 pa-3"
+            class="mt-6 pa-3"
           >
             <v-card-title class="d-flex justify-center">
-              <h3 class="mt-1 mb-3">Register</h3>
+              <h3>Register</h3>
             </v-card-title>
 
             <v-card-text>
@@ -20,7 +20,6 @@
                   label="Email"
                   type="email"
                   placeholder="Example@gmail.com"
-                  outlined
                   autocomplete="on"
                   :error-messages="errors"
                   v-model.trim="registerForm.email"
@@ -32,7 +31,6 @@
                   label="Full Name"
                   type="text"
                   placeholder="Tony Stark"
-                  outlined
                   :error-messages="errors"
                   v-model.trim="registerForm.displayName"
                 ></v-text-field>
@@ -44,7 +42,6 @@
                   :type="showPassword ? 'text' : 'password'"
                   label="Password"
                   placeholder="******"
-                  outlined
                   autocomplete="on"
                   class="flex-wrap"
                   v-model.trim="registerForm.password"
@@ -59,7 +56,6 @@
                   :type="showPassword ? 'text' : 'password'"
                   label="Password Confirmation"
                   placeholder="******"
-                  outlined
                   autocomplete="on"
                   class="flex-wrap"
                   v-model.trim="registerForm.password2"
@@ -69,6 +65,7 @@
               </ValidationProvider>
 
               <v-btn 
+                class="mt-2"
                 color="teal" 
                 block
                 :dark="!invalid"

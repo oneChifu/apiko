@@ -30,6 +30,8 @@ export default {
 
   computed: {
     ...mapGetters({
+      user: "users/data",
+      favorites: "users/favorites",
       items: "items/data"
     }),
 

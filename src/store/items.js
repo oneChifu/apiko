@@ -43,7 +43,7 @@ export default {
     },
 
     async addItem({ dispatch, commit, rootState }, item) {
-      console.log('addItem', item)
+      // console.log('addItem', item)
       try {
         const resultItem = await itemsCollection.add({
           userUID: rootState.users.data.uid,
@@ -74,12 +74,10 @@ export default {
         });
       }
 
-      console.log('data', data)
-      
       let imagesUrl = await Promise.all(data.images.map(async img => {
         const res = await storage.ref(`images/${data.itemId}/${img.name.replace(img.name.substr(0, img.name.lastIndexOf(".")), uniqName())}`).put(img)
           
-        console.log('await imageUrl', res.ref.getDownloadURL())
+        // console.log('await imageUrl', res.ref.getDownloadURL())
         return res.ref.getDownloadURL()
       }))
 

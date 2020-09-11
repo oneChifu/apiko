@@ -7,6 +7,7 @@ export default {
   state: {
     loggedIn: false,
     data: {},
+    favorites: {},
   },
 
   getters: {
@@ -16,6 +17,10 @@ export default {
 
     data(state) {
       return state.data;
+    },
+
+    favorites(state) {
+      return state.favorites;
     }
   },
 
@@ -37,6 +42,11 @@ export default {
       state.data = {};
       state.loggedIn = false;
     },
+
+    SET_FAVORITES(state, data) {
+      console.log('SET_FAVORITES', data)
+      state.favorites = data;
+    },
   },
 
   actions: {
@@ -51,7 +61,7 @@ export default {
         
         // register collection for user
         await usersCollection.doc(state.data.uid).set({
-          favorites: {}
+          favorites: Object
         })
 
         // redirect to home page
@@ -81,11 +91,13 @@ export default {
         email: user.email,
         photoUrl: user.photoURL,
         emailVerified: user.emailVerified,
-        uid: user.uid
+        uid: user.uid,
       }
 
       const userDoc = await usersCollection.doc(userData.uid).get();
-      userData.favorites = userDoc.data().favorites
+      if ( userDoc.data().favorites ) {
+        commit('SET_FAVORITES', userDoc.data().favorites)
+      }
 
       // set user data to state
       commit('SET_USER', userData)
@@ -133,7 +145,7 @@ export default {
     async logout({ dispatch, commit }) {
       try {
         auth.signOut().then((result) => {
-          commit('SET_USER', {})
+          commit('REMOVE_USER')
           router.push('/login').catch(e => {})
         })
       } catch (e) {
@@ -142,20 +154,33 @@ export default {
       }
     },
 
-    async toggleFavorites({ dispatch, commit, state, rootState }, item) {
+    async toggleFavorite({ dispatch, commit, state, rootState }, item) {
       if ( !auth.currentUser ) {
         return false
       }
 
       try {
-        usersCollection.doc(state.data.uid).set({
-          favorites: {
-            // [item.id]: favoritesValue()
-            [item.id]: state.data.favorites[item.id] ? false : true
-          }
-        }, {merge: true}).then(() => {
-          state.data.favorites[item.id] = !state.data.favorites[item.id]
-        });
+        let userFavorites = Object.assign({}, state.favorites);
+        
+        if ( userFavorites[item.id] === undefined ) {
+          await usersCollection.doc(state.data.uid).set({
+            favorites: {
+              [item.id]: true
+            }
+          }, {merge: true}).then((res) => {
+            userFavorites[item.id] = true
+          })
+        } else {
+          await usersCollection.doc(state.data.uid).set({
+            favorites: {
+              [item.id]: fb.firestore.FieldValue.delete()
+            }
+          }, {merge: true}).then((res) => {
+            delete userFavorites[item.id]
+          })
+        }
+        
+        commit('SET_FAVORITES', userFavorites)
       } catch (e) {
         dispatch("setError", e, { root: true });
       }

@@ -5,3 +5,170 @@ body {
     }
   }
 }
+
+
+.v-application {
+  a {
+    text-decoration: none;
+  }
+
+
+  .v-app-bar {
+    background: linear-gradient(180deg, #090810 0%, #171236 100%);
+    min-height: 64px;
+
+    @include media-breakpoint-up('sm') {
+      min-height: 77px;
+    }
+
+    .v-toolbar__content {
+      min-height: 64px;
+
+      @include media-breakpoint-up('sm') {
+        min-height: 77px;
+      }
+    }
+  }
+  .header {
+    &_auth {
+      .v-app-bar {
+          background: #F8F8F8 !important;
+      }
+    }
+
+    &__btn_auth {
+      background: transparent !important;
+
+      &:after,
+      &:before {
+        display: none;
+      }
+
+      &.v-btn--active {
+        
+      }
+    }
+  }
+
+  .v-footer {
+    background: rgba(192, 196, 206, 0.127321);
+    box-shadow: none;
+    height: 64px;
+    border-top: 1px solid rgba(224,224,225, 0.2);
+    font-size: 14.4px;
+    line-height: 17px;
+    color: #C0C4CE !important;
+    padding: 0;
+
+    @include media-breakpoint-up('sm') {
+      min-height: 73px;
+    }
+  }
+
+
+  .v-card {
+    &.elevation-10 {
+      box-shadow: 0px 2px 42px rgba(0, 0, 0, 0.111233) !important;
+      border-radius: 7px;
+    }
+  }
+
+
+  .v-input.v-text-field {
+    margin-top: 10px;
+
+    &:before {
+      display: none;
+    }
+
+    .v-label {
+      height: auto !important;
+      top: -17px !important;
+      left: 0 !important;
+      font-family: Helvetica;
+      font-size: 12px;
+      line-height: 14px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: #303030;
+      transform: none;
+    }
+
+    .v-input__slot {
+      background: #F9FAFB;
+      border-radius: 5px;
+      display: flex;
+      border: 1px solid #DEDEE0;
+      margin-bottom: 0;
+
+      &:before {
+        display: none;
+      }
+    }
+
+    input {
+      padding: 0 13px;
+      min-height: 58px;
+      border: none;
+    }
+
+    .v-input__append-inner {
+      margin: auto;
+      padding-right: 4px;
+    }
+
+    .v-text-field__details {
+      overflow: visible;
+
+      .v-messages__message {
+        background: #ff5252 !important;
+        color: #ffffff;
+        padding: 2px 6px;
+        width: auto;
+        position: relative;
+        overflow: visible;
+        border-radius: 3px;
+        font-size: 11px;
+
+        &:before {
+          border-bottom: 6px solid #ff5252;
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          content: '';
+          display: block;
+          position: absolute;
+          top: -6px;
+          left: 6px;
+        }
+      }
+    }
+  }
+
+  .v-btn {
+    box-shadow: none;
+
+    &__content {
+      text-transform: none;
+    }
+  }
+  
+}
+
+
+.v-application {
+  .form_login {
+    &__forgot {
+      text-align: right;
+      
+      a.router-link-active,
+      a {
+        font-size: 14px;
+        line-height: 16px;
+        text-align: center;
+        letter-spacing: 0.4px;
+        color: #8C8C8C;
+      }
+    }
+  }
+}
+
