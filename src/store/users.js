@@ -74,7 +74,7 @@ export default {
 
     async login({ dispatch, commit, state }, form) {
       try {
-        const { user } = await fb.auth.signInWithEmailAndPassword(form.email, form.password)
+        const { user } = await auth.signInWithEmailAndPassword(form.email, form.password)
 
         // fetch user and set in state even when register
         await dispatch('fetchUser', user)

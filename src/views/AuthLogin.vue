@@ -19,6 +19,7 @@
                 <v-text-field
                   label="Email"
                   type="email"
+                  :disabled="loading"
                   placeholder="Example@gmail.com"
                   autocomplete="on"
                   :error-messages="errors"
@@ -30,6 +31,7 @@
                 <v-text-field
                   :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                   :type="showPassword ? 'text' : 'password'"
+                  :disabled="loading"
                   label="Password"
                   placeholder="******"
                   autocomplete="on"
@@ -46,12 +48,12 @@
 
               <v-btn 
                 class="mt-3"
-                color="teal" 
+                color="primary" 
                 block
-                :dark="!invalid"
                 x-large
+                :loading="loading"
                 @click="login()"
-                :disabled="invalid"
+                :disabled="invalid || loading"
               >Continue</v-btn>
             </v-card-text>
           </v-card>
@@ -60,7 +62,7 @@
     </ValidationObserver>
     
     <v-row>
-      <v-col cols="6" offset="3" class="d-flex justify-center">
+      <v-col cols="12" sm="8" offset-sm="2" md="6" offset-md="3" class="d-flex justify-center">
         <v-card 
           ref="form" 
           width="100%" 
@@ -89,6 +91,7 @@ export default {
   },
 
   data: () => ({
+    loading: false,
     showPassword: false,
 
     loginForm: {
@@ -99,6 +102,8 @@ export default {
 
   methods: {
     login() {
+      this.loading = true
+
       this.$store.dispatch('users/login', {
         email: this.loginForm.email,
         password: this.loginForm.password

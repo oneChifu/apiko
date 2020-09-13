@@ -16,12 +16,11 @@
             <v-card-text>
               <v-container class="pa-0">
                 <v-row no-gutters>
-                  <v-col cols="8" offset="2" class="text-center">
+                  <v-col cols="8" offset="2">
                     <ValidationProvider name="Title" v-slot="{ errors }" rules="required|min:3|max:128">
                       <v-text-field
                         type="text"
                         placeholder="For example: Iron man suit"
-                        outlined
                         :error-messages="errors"
                         v-model.trim="addForm.title"
                       >
@@ -35,7 +34,6 @@
                       <v-text-field
                         type="text"
                         placeholder="For example: Los Angeles, CA"
-                        outlined
                         :error-messages="errors"
                         v-model.trim="addForm.location"
                       >
@@ -49,7 +47,6 @@
                       <v-textarea
                         label="Description"
                         placeholder="For example: Iron man suit"
-                        outlined
                         auto-grow
                         rows="6"
                         counter="500"
@@ -63,30 +60,34 @@
                         label="Price"
                         type="text"
                         placeholder="For example: 100"
-                        outlined
                         :error-messages="errors"
                         v-model.trim="addForm.price"
                       ></v-text-field>
                     </ValidationProvider>
 
+                    <div class="catalog_add__files-label">
+                      Photos
+                    </div>
+
                     <div class="catalog_add__files">
-                      <div v-if="addForm.imagesUrl.length">
-                        <div v-for="(url, index) in addForm.imagesUrl" :key="index">
+                      <div v-if="addForm.imagesUrl.length" class="catalog_add__files__images">
+                        <div v-for="(url, index) in addForm.imagesUrl" :key="index" class="catalog_add__files__image">
                           <v-img
                             :src="url"
-                            width="100"
+                            width="92"
                             aspect-ratio="1"
-                            class="grey lighten-2"
                           ></v-img>
 
                           <v-btn
                             icon
                             @click="removeImage(index)"
-                          >Delete</v-btn>
+                          >
+                            <v-icon>mdi-close</v-icon>
+                          </v-btn>
                         </div>
                       </div>
 
-                      <div v-if="addForm.imagesUrl.length < 3">
+                      <div v-if="addForm.imagesUrl.length < 3" class="catalog_add__files__add">
                         <v-progress-circular
                           v-if="loadingImage"
                           size="100"
@@ -95,14 +96,17 @@
                           color="teal">
                         </v-progress-circular>
 
-                        <label v-else class="file">Select Images...
-                          <input 
-                            type="file" 
-                            multiple 
-                            accept="image/*"
-                            @change="preloadImage($event)"
-                          >
-                        </label>
+                        <v-file-input 
+                          v-else
+                          type="file" 
+                          multiple 
+                          hide-input
+                          hide-details
+                          accept="image/*"
+                          icon="mdi-plus"
+                          prepend-icon="mdi-plus"
+                          @change="preloadImage($event)"
+                        ></v-file-input>
                       </div>
                     </div>
 
@@ -156,8 +160,13 @@ export default {
   },
 
   methods: {
-    addItem() {
-      this.$store.dispatch('items/addItem', this.addForm)
+    async addItem() {
+      this.loading = true;
+
+      this.$store.dispatch('items/addItem', this.addForm).then(() => {
+        this.loading = false
+      })
+
       // this.$store.dispatch('items/addImages', this.addForm.images)
       // const imageName = this.addForm.images[0].name.substr(0, this.addForm.images[0].name.lastIndexOf("."));
       
@@ -167,16 +176,18 @@ export default {
       // console.log('addForm', this.addForm.images[0].name)
     },
     
-    preloadImage(e) {
-      const fileList = e.target.files || e.dataTransfer.files
+    preloadImage(files) {
+      // const files = e.target.files || e.dataTransfer.files
 
-      if ( fileList.length === 0 ) {
+      console.log('preloadImage', files)
+
+      if ( files.length === 0 ) {
         return
       }
 
       this.loadingImage = true
 
-      Array.from(fileList).forEach(image => {
+      Array.from(files).forEach(image => {
         const imageUrl = window.URL.createObjectURL(image)
 
         new Promise((resolve, reject) => {

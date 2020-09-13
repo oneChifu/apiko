@@ -26,7 +26,7 @@
             dark
             color="teal"
             width="131"
-            class="mr-2"
+            class="mr-3"
             :to="{name: 'home'}"
             exact
             v-if="$route.name != 'home'"
@@ -39,6 +39,7 @@
             dark
             color="teal"
             width="131"
+            class="mr-3"
             :to="{name: 'add'}"
             v-if="$route.name == 'home'"
           >
@@ -63,18 +64,16 @@
                 <v-list-item-icon>
                   <v-icon>mdi-account</v-icon>
                 </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Profile</v-list-item-title>
-                </v-list-item-content>
+
+                <v-list-item-title>Profile</v-list-item-title>
               </v-list-item>
 
               <v-list-item @click="logout">
                 <v-list-item-icon>
                   <v-icon>mdi-logout</v-icon>
                 </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>Logout</v-list-item-title>
-                </v-list-item-content>
+
+                <v-list-item-title>Logout</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>

@@ -26,7 +26,6 @@
               <v-text-field
                 label="Full Name"
                 type="text"
-                outlined
                 required
                 v-model.trim="user.displayName"
               ></v-text-field>
@@ -44,11 +43,12 @@
               </v-text-field> -->
 
               <v-btn 
-                class="mt-5"
-                color="teal" 
+                class="mt-2"
+                color="primary" 
                 block
-                dark
                 x-large
+                :loading="loading"
+                :disabled="loading"
                 @click="editUser()"
               >Update Profile</v-btn>
             </v-card-text>
@@ -69,8 +69,7 @@ export default {
   },
 
   data: () => ({
-    // showPassword: false,
-    // newPassword: '',
+    loading: false,
   }),
 
   computed: {
@@ -81,10 +80,12 @@ export default {
 
   methods: {
     async editUser() {
-      await this.$store.dispatch('users/editUser', {
-        // email: this.user.email,
+      this.loading = true
+
+      this.$store.dispatch('users/editUser', {
         displayName: this.user.displayName,
-        // password: this.newPassword
+      }).then(() => {
+        this.loading = false
       })
     }
   }
