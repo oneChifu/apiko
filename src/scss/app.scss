@@ -11,11 +11,14 @@ body {
   a {
     text-decoration: none;
   }
+}
 
-
+.v-application {
   .v-app-bar {
     background: linear-gradient(180deg, #090810 0%, #171236 100%);
     min-height: 64px;
+    height: auto !important;
+    position: relative !important;
 
     @include media-breakpoint-up('sm') {
       min-height: 77px;
@@ -23,12 +26,14 @@ body {
 
     .v-toolbar__content {
       min-height: 64px;
+      height: auto !important;
 
       @include media-breakpoint-up('sm') {
         min-height: 77px;
       }
     }
   }
+
   .header {
     &_auth {
       .v-app-bar {
@@ -43,13 +48,50 @@ body {
       &:before {
         display: none;
       }
+    }
 
-      &.v-btn--active {
-        
+    &__search {
+      margin-top: 10px;
+
+      @include media-breakpoint-up('sm') {
+        margin-top: 30px;
+      }
+
+      .v-input {
+        margin-top: 0 !important;
+
+        .v-input__control,
+        .v-input__slot {
+          height: 38px !important;
+          min-height: 0 !important;
+
+          @include media-breakpoint-up('sm') {
+            height: 50px !important;
+          }
+
+          input {
+            padding-left: 0 !important;
+          }
+        }
+      }
+
+      &__input_title {
+        width: 100% !important;
+
+        @include media-breakpoint-up('sm') {
+          width: auto !important;
+        }
+      }
+      &__input_location {
+        @include media-breakpoint-up('sm') {
+          max-width: 200px;
+        }
       }
     }
   }
+}
 
+.v-application {
   .v-footer {
     background: rgba(192, 196, 206, 0.127321);
     box-shadow: none;
@@ -64,15 +106,16 @@ body {
       min-height: 73px;
     }
   }
+}
 
 
+.v-application {
   .v-card {
     &.elevation-10 {
       box-shadow: 0px 2px 42px rgba(0, 0, 0, 0.111233) !important;
       border-radius: 7px;
     }
   }
-
 
   .v-input.v-text-field {
     margin-top: 10px;
@@ -94,7 +137,22 @@ body {
       transform: none;
     }
 
+    &.v-text-field--outlined {
+      fieldset {
+        border: none;
+        color: none;
+      }
+
+      .v-input__slot {
+        background: #F9FAFB;
+        border: 1px solid #DEDEE0;
+        box-shadow: none;
+        margin-bottom: 0;
+      }
+    }
+
     .v-input__slot {
+      outline: none;
       background: #F9FAFB;
       border-radius: 5px;
       display: flex;
@@ -111,6 +169,7 @@ body {
       min-height: 58px;
       border: none;
     }
+
     textarea {
       padding: 17px 13px;
       border: none;
@@ -192,8 +251,9 @@ body {
       border-radius: 5px;
       display: flex;
       border: 1px solid #DEDEE0;
-      margin-bottom: 0;
+      margin-bottom: 22px;
       padding: 17px 13px;
+      width: 100%;
 
       &-label {
         font-family: Helvetica;
@@ -207,18 +267,142 @@ body {
       }
 
       &__images {
-
+        display: flex;
       }
 
-      &__image {
+      &__add {
+        width: 52px;
+        height: 52px;
+        background: #E4E4E4;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #E4E4E4;
+
+        @include media-breakpoint-up('sm') {
+          width: 92px;
+          height: 92px;
+        }
+
+        .v-input__prepend-outer,
+        .v-input {
+          padding: 0;
+          margin: 0;
+          justify-content: center;
+        }
+        .v-icon {
+          font-size: 44px;
+          color: #349A89;
+        }
+      }
+    }
+
+    &__image {
+      width: 52px;
+      height: 52px;
+      border-radius: 4px;
+      margin-right: 10px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #E4E4E4;
+
+      @include media-breakpoint-up('sm') {
         width: 92px;
         height: 92px;
-        border-radius: 4px;
-        margin-right: 10px;
-        position: relative;
-        overflow: hidden;
+      }
+
+      &__remove {
+        position: absolute;
+        right: 2px;
+        top: 2px;
+        z-index: 10;
+        display: block;
+        padding: 2px;
+        border-radius: 100%;
+        background: rgba(255,255,255,.5);
+
+        .v-icon {
+          font-size: 18px;
+          color: #F00;
+        }
       }
     }
   }
 }
 
+.v-application {
+  .catalog {
+    &__filter {
+      background: #FFFFFF;
+      box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.217111);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 19px 0;
+      padding: 12px;
+
+      .v-input {
+        margin: 0;
+
+        .v-input__slot {
+          height: 35px;
+        }
+
+        input {
+          font-size: 14px;
+          padding: 0;
+        }
+      }
+    }
+
+    &__item {
+      background: #FFFFFF !important;
+      border: 1px solid #E4E4E4 !important;
+      box-shadow: 0px 4px 14px rgba(121, 121, 121, 0.0527344) !important;
+      border-radius: 4px !important;
+      padding: 4px;
+      height: 100%;
+
+      &__image {
+        border-radius: 4px 4px 0 0;
+        overflow: hidden;
+
+        &_empty {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+
+          .v-icon {
+            opacity: 0.4;
+            font-size: 100px;
+          }
+        }
+      }
+
+      .v-card__title {
+        position: relative;
+        padding: 8px 12px;
+        font-size: 15px;
+        line-height: 17px;
+        color: #373738;
+      }
+      .v-card__text {
+        padding: 2px 12px 8px 12px;
+      }
+
+      &__price {
+        font-size: 18px;
+        line-height: 21px;
+        color: #101010;
+      }
+
+      &__favorite {
+        right: 4px !important;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.163407) !important;
+      }
+    }
+  }
+}

@@ -9,7 +9,12 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'home',
-    component: () => import('../views/Home.vue')
+    component: () => import('../views/Home.vue'),
+  },
+  {
+    path: '/:page',
+    name: 'home-catalog',
+    component: () => import('../views/Home.vue'),
   },
   {
     path: '/login',
@@ -35,14 +40,6 @@ Vue.use(VueRouter)
     component: () => import('../views/CatalogAdd.vue'),
     meta: { requiresAuth: true }
   },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ]
 
 const router = new VueRouter({
@@ -58,11 +55,7 @@ router.beforeEach((to, from, next) => {
   if ( requiresAuth && !auth.currentUser ) {
     next('/login')
   } else if (authLayout && auth.currentUser ) {
-    // if ( from.name == '/' && to.path != '/') {
-      next('/')
-    // } else {
-      // next()
-    // }
+    next('/')
   } else {
     next()
   }

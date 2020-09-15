@@ -6,44 +6,64 @@ export default {
 
   state: {
     data: [],
+    searchedData: {}
   },
 
   getters: {
     data(state) {
       return state.data;
+    },
+
+    searchedData(state) {
+      return state.searchedData;
     }
   },
 
   mutations: {
     SET_ITEMS(state, data) {
-      state.data = data;
+      // Sort items by created date "created" DESC
+      function sortItems(items) {
+        function compare(a, b) {
+          if ( a.created > b.created ) {
+            return -1;
+          }
+
+          if ( a.created < b.created ) {
+            return 1;
+          }
+          
+          return 0;
+        }
+
+        return items.sort(compare);
+      }
+
+      state.data = sortItems(data);
     },
 
+    SET_SEARCHED_DATA(state, data) {
+      if ( typeof data == 'object' ) {
+        state.searchedData = Object.assign({}, state.searchedData, data);
+      } else {
+        state.searchedData = {}
+      }
+    },
   },
 
   actions: {
-    async getItems({ dispatch, commit, rootState }, items) {
+    async getItems({ dispatch, commit, rootState }, options) {
       try {
-        const res = await itemsCollection.get()
-        const items = res.docs.map(i => {
+        const result = await itemsCollection.get()
+
+        commit('SET_ITEMS', result.docs.map(i => {
           return Object.assign(i.data(), {id: i.id})
-        })
-
-        // items.forEach(async (item) => {
-          // Object.assign(item, )
-          // await storage.ref(`images/${rootState.user.data.uid}/${data.itemId}/${img.name.replace(img.name.substr(0, img.name.lastIndexOf(".")), createUUID())}`).put(img)
-        // })
-
-        // console.log('getItems', items)
-
-        commit('SET_ITEMS', items)
+        }))
       } catch (e) {
         dispatch("setError", e, { root: true });
       }
     },
 
     async addItem({ dispatch, commit, rootState }, item) {
-      // console.log('addItem', item)
       try {
         const resultItem = await itemsCollection.add({
           userUID: rootState.users.data.uid,
@@ -77,13 +97,14 @@ export default {
       let imagesUrl = await Promise.all(data.images.map(async img => {
         const res = await storage.ref(`images/${data.itemId}/${img.name.replace(img.name.substr(0, img.name.lastIndexOf(".")), uniqName())}`).put(img)
           
-        // console.log('await imageUrl', res.ref.getDownloadURL())
         return res.ref.getDownloadURL()
       }))
 
       return imagesUrl;
     },
 
-    
+    setSearchedData({ dispatch, commit, state }, data) {
+      commit('SET_SEARCHED_DATA', data)
+    }
   }
 };

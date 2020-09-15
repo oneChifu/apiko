@@ -44,7 +44,6 @@ export default {
     },
 
     SET_FAVORITES(state, data) {
-      console.log('SET_FAVORITES', data)
       state.favorites = data;
     },
   },
@@ -109,10 +108,8 @@ export default {
       // Update user email if exist
       // if ( email != '' && email != user.email ) {
       //   user.updateEmail(email).then((result) => {
-      //     console.log('updateEmail', result)
       //     commit('SET_USER_EMAIL', email)
       //   }).catch((e) => {
-      //     console.log('error updateEmail', e)
       //     dispatch("setError", e, { root: true });
       //     throw e;
       //   });
@@ -133,9 +130,7 @@ export default {
       // Update user password if exist
       // if ( password != '' ) {
       //   user.updatePassword(password).then((result) => {
-      //     console.log('updateProfile', result)
       //   }).catch((e) => {
-      //     console.log('error updatePassword', e)
       //     dispatch("setError", e, { root: true });
       //     throw e;
       //   });

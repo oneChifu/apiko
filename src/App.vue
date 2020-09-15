@@ -2,7 +2,7 @@
   <v-app>
     <the-header />
 
-    <v-main>
+    <v-main class="pt-0">
       <router-view></router-view>
     </v-main>
 
@@ -20,8 +20,14 @@ export default {
   },
 
   data: () => ({
-    //
+    // searchItemsData: {}
   }),
+
+  methods: {
+    // updateItems(data) {
+    //   this.searchItemsData = data;
+    // }
+  }
 };
 </script>
 

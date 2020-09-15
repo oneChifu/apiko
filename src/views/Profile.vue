@@ -8,7 +8,7 @@
             width="100%"
             max-width="420"
             elevation="10"
-            class="mt-10 pa-3"
+            class="mt-4 pa-3"
           >
             <v-card-title class="d-flex justify-center">
               <h3 class="mt-1 mb-3">Edit Profile</h3>

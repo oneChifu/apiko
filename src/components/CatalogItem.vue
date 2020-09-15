@@ -1,21 +1,29 @@
 <template>
-  <v-col cols="3" class="pa-2">
+  <v-col cols="6" sm="3" class="pa-2">
     <v-card
-      class="mx-auto"
+      class="catalog__item"
       flat 
       outlined
     >
-      <div>
+      <div 
+        v-if="item.imagesUrl && item.imagesUrl.length"
+        class="catalog__item__image"
+      >
         <v-img
-          v-if="item.imagesUrl && item.imagesUrl.length"
           :src="item.imagesUrl[0]"
-          aspect-ratio="1.5"
+          :aspect-ratio="16/12"
         ></v-img>
-
-        <div v-else class=""></div>
       </div>
 
-      <v-card-title style="position: relative;">
+      <v-responsive 
+        v-else 
+        class="catalog__item__image catalog__item__image_empty"
+        :aspect-ratio="16/12"
+      >
+        <v-icon color="primary">mdi-image-area</v-icon>
+      </v-responsive>
+
+      <v-card-title>
         {{ item.title }}
 
         <v-btn
@@ -27,25 +35,21 @@
           x-small
           :ripple="false"
           color="white"
+          class="catalog__item__favorite"
+          @click="toggleFavorite()"
         >
           <v-icon 
-            color="teal"
-            @click="toggleFavorite()"
+            :color="isFavorite ? 'primary' : 'grey'"
+            size="20"
             v-text="isFavorite ? 'mdi-heart' : 'mdi-heart-outline'"
           ></v-icon>
         </v-btn>
       </v-card-title>
 
       <v-card-text>
-        <div>
-          Item id: {{ item.id }}
+        <div class="catalog__item__price">
+          <b>${{ Number.parseFloat(Number.parseFloat(item.price).toFixed(2)).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ') }}</b>
         </div>
-
-        <div v-if="user.favorites">
-          <div v-for="(i, index) in user.favorites" :key="index">{{ index }}</div>
-        </div>
-
-        <div><b>${{ Number.parseFloat(Number.parseFloat(item.price).toFixed(2)).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ') }}</b></div>
       </v-card-text>
     </v-card>
   </v-col>
@@ -61,15 +65,9 @@ export default {
       type: Object,
       required: true
     },
-
-    // user: {
-    //   type: Object,
-    //   required: true
-    // }
   },
 
   data: () => ({
-    // favorite: false
   }),
 
   computed: {
@@ -80,76 +78,18 @@ export default {
     }),
     
     isFavorite() {
-      // get: function() {
-        if ( !this.loggedIn || !this.favorites ) {
-          return false
-        }
+      if ( !this.loggedIn || !this.favorites ) {
+        return false
+      }
 
-      //   console.log('favorite get', this)
-
-        return this.favorites[this.item.id] ? true : false
-      // },
-
-      // set: function(val) {
-      //   console.log('favorite set', val)
-        
-      //   // val
-      // }
+      return this.favorites[this.item.id] ? true : false
     }
-  },
-
-  // watch: {
-  //   user: {
-  //     handler(val) {
-  //       // do stuff
-  //       console.log('watch user', val)
-  //     },
-  //     immediate: true,
-  //     deep: true
-  //   }
-  // },
-
-  mounted() {
-    // if ( !this.user || !this.user.favorites ) {
-    //   this.favorite = false
-    // }
-
-    // this.favorite = this.user.favorites[this.item.id] ? true : false
-
-    // this.isFavorite()
-    // console.log('mounted item', this.user)
-
-    // favorite() {
-    //   if ( !this.user.favorites ) {
-    //     return false
-    //   }
-
-    //   return this.user.favorites[this.item.id] ? true : false
-    // }
-  },
-
-  created() {
-    
-    // this.isFavorite()
-    // this.favorite = this.isFavorite()
-
-    console.log('create item', this.user)
   },
 
   methods: {
     async toggleFavorite() {
       await this.$store.dispatch('users/toggleFavorite', this.item)
-
-      // Object.assign(this.user.favorites, {'dada': false})
     },
-
-    // isFavorite() {
-    //   if ( !this.user || !this.user.favorites ) {
-    //     return false
-    //   }
-
-    //   return this.user.favorites[this.item.id] ? true : false
-    // }
   }
 }
 </script>
